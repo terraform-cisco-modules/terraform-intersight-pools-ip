@@ -10,7 +10,7 @@ Location in GUI:
 ### main.tf
 ```hcl
 module "ip_pool" {
-  source  = "scotttyso/pools-ip/intersight"
+  source  = "terraform-cisco-modules/pools-ip/intersight"
   version = ">= 1.0.1"
 
   assignment_order = "sequential"
