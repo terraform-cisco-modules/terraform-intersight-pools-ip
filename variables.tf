@@ -47,8 +47,8 @@ variable "ipv4_config" {
   List of IPv4 Addresses to Assign to the IP Pool.
     * gateway - Gateway of the Subnet.  Example "198.18.0.1".
     * netmask - Netmask of the Subnet in X.X.X.X format.  Example "255.255.255.0".
-    * primary_dns = Primary DNS Server to Assign to the Pool.  Example "208.67.200.200".
-    * secondary_dns = Secondary DNS Server to Assign to the Pool.  Example "208.67.220.220".
+    * primary_dns = Primary DNS Server to Assign to the Pool.  Example "208.67.220.220".
+    * secondary_dns = Secondary DNS Server to Assign to the Pool.  Example "208.67.222.222".
   EOT
   type = list(object(
     {

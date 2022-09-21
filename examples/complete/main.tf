@@ -14,8 +14,8 @@ module "ip_pool" {
     {
       gateway       = "198.18.0.1"
       netmask       = "255.255.255.0"
-      primary_dns   = "208.67.200.200"
-      secondary_dns = "208.67.220.220"
+      primary_dns   = "208.67.220.220"
+      secondary_dns = "208.67.222.222"
     }
   ]
   ipv6_blocks = [
