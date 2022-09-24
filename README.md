@@ -11,7 +11,7 @@ Location in GUI:
 ```hcl
 module "ip_pool" {
   source  = "terraform-cisco-modules/pools-ip/intersight"
-  version = ">= 1.0.1"
+  version = ">= 1.0.2"
 
   assignment_order = "sequential"
   description      = "default IP Pool"
