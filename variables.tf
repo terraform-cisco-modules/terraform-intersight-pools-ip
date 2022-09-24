@@ -1,7 +1,3 @@
-terraform {
-  experiments = [module_variable_optional_attrs]
-}
-
 #____________________________________________________________
 #
 # IP Pool Variables Section.
@@ -35,8 +31,8 @@ variable "ipv4_blocks" {
   type = list(object(
     {
       from = string
-      size = optional(number)
-      to   = optional(string)
+      size = optional(number, null)
+      to   = optional(string, null)
     }
   ))
 }
@@ -54,8 +50,8 @@ variable "ipv4_config" {
     {
       gateway       = string
       netmask       = string
-      primary_dns   = optional(string)
-      secondary_dns = optional(string)
+      primary_dns   = optional(string, "208.67.220.220")
+      secondary_dns = optional(string, "")
     }
   ))
 }
@@ -72,8 +68,8 @@ variable "ipv6_blocks" {
   type = list(object(
     {
       from = string
-      size = optional(number)
-      to   = optional(string)
+      size = optional(number, null)
+      to   = optional(string, null)
     }
   ))
 }
@@ -91,8 +87,8 @@ variable "ipv6_config" {
     {
       gateway       = string
       prefix        = number
-      primary_dns   = optional(string)
-      secondary_dns = optional(string)
+      primary_dns   = optional(string, "2620:119:53::53")
+      secondary_dns = optional(string, "::")
     }
   ))
 }

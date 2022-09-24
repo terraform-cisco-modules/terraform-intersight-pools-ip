@@ -43,8 +43,8 @@ module "ip_pool" {
     {
       gateway       = "2001:db8::1"
       prefix        = 64
-      primary_dns   = "2620:119:35::35"
-      secondary_dns = "2620:119:53::53"
+      primary_dns   = "2620:119:53::53"
+      secondary_dns = "2620:119:35::35"
     }
   ]
   name         = "default"

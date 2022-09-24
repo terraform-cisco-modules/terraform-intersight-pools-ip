@@ -5,5 +5,5 @@
 
 output "moid" {
   description = "IP Pool Managed Object ID (moid)."
-  value       = intersight_ippool_pool.ip_pool.moid
+  value       = intersight_ippool_pool.ip.moid
 }
