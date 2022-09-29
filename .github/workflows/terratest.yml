@@ -18,8 +18,9 @@ jobs:
         env: 
           IS_KEYID: ${{ secrets.IS_KEYID }}
           IS_KEY: ${{ secrets.IS_KEY }}
-          IS_KEYFILE: key.pem
+          IS_KEYFILE: ${{ github.workspace }}/key.pem
         run: |
-          echo ${IS_KEY} > key.pem
+          echo Writing Intersight key to temp file ${IS_KEYFILE}
+          echo ${IS_KEY} > ${IS_KEYFILE}
           file ${IS_KEYFILE}
           go test -v ./tests
