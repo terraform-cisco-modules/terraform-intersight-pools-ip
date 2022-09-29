@@ -1,9 +1,5 @@
 terraform {
   required_providers {
-    test = {
-      source = "terraform.io/builtin/test"
-    }
-
     intersight = {
       source  = "CiscoDevNet/intersight"
       version = ">=1.0.32"
@@ -11,41 +7,60 @@ terraform {
   }
 }
 
+# Setup provider, variables and outputs
+provider "intersight" {
+  apikey    = var.intersight_keyid
+  secretkey = file(var.intersight_secretkeyfile)
+  endpoint  = var.intersight_endpoint
+}
+
+variable "intersight_keyid" {}
+variable "intersight_secretkeyfile" {}
+variable "intersight_endpoint" {
+  default = "intersight.com"
+}
+variable "name" {}
+
+output "moid" {
+  value = module.main.moid
+}
+
+# This is the module under test
 module "main" {
-  source           = "../.."
+  source = "../.."
+
   assignment_order = "sequential"
-  description      = "Demo WWPN Pool"
-  id_blocks = [
+  description      = "Demo IP Pool"
+  ipv4_blocks = [
     {
-      from = "0:00:00:25:B5:00:00:00"
+      from = "198.18.0.10"
+      size = 240
+    }
+  ]
+  ipv4_config = [
+    {
+      gateway       = "198.18.0.1"
+      netmask       = "255.255.255.0"
+      primary_dns   = "208.67.220.220"
+      secondary_dns = "208.67.222.222"
+    }
+  ]
+  ipv6_blocks = [
+    {
+      from = "2001:db8::10"
       size = 1000
     }
   ]
-  name         = "default"
-  organization = "default"
-  pool_purpose = "WWPN"
-}
-
-data "intersight_fcpool_pool" "wwpn_pool" {
-  depends_on = [
-    module.main
+  ipv6_config = [
+    {
+      gateway       = "2001:db8::1"
+      prefix        = 64
+      primary_dns   = "2620:119:53::53"
+      secondary_dns = "2620:119:35::35"
+    }
   ]
-  name = "default"
+
+  name         = var.name
+  organization = "default"
 }
 
-resource "test_assertions" "wwpn_pool" {
-  component = "wwpn_pool"
-
-  # equal "description" {
-  #   description = "description"
-  #   got         = data.intersight_fcpool_pool.wwpn_pool.description
-  #   want        = "Demo WWPN Pool"
-  # }
-  # 
-  # equal "name" {
-  #   description = "name"
-  #   got         = data.intersight_fcpool_pool.wwpn_pool.name
-  #   want        = "default"
-  # }
-
-}
