@@ -21,4 +21,5 @@ jobs:
           IS_KEYFILE: key.pem
         run: |
           echo ${IS_KEY} > key.pem
+          file ${IS_KEYFILE}
           go test -v ./tests
