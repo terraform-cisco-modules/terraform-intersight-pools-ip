@@ -1,4 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
+[![Tests](https://github.com/terraform-cisco-modules/terraform-intersight-pools-ip/actions/workflows/terratest.yml/badge.svg)](https://github.com/terraform-cisco-modules/terraform-intersight-pools-ip/actions/workflows/terratest.yml)
 # Terraform Intersight Pools - IP
 Manages Intersight IP Pools
 

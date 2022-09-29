@@ -3,6 +3,7 @@ version: '>= 0.14.0'
 formatter: markdown table
 
 content: |-
+  [![Tests](https://github.com/terraform-cisco-modules/terraform-intersight-pools-ip/actions/workflows/terratest.yml/badge.svg)](https://github.com/terraform-cisco-modules/terraform-intersight-pools-ip/actions/workflows/terratest.yml)
   # Terraform Intersight Pools - IP
   Manages Intersight IP Pools
   
