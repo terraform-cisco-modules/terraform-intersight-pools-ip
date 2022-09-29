@@ -21,6 +21,6 @@ jobs:
           IS_KEYFILE: ${{ github.workspace }}/key.pem
         run: |
           echo Writing Intersight key to temp file ${IS_KEYFILE}
-          echo ${IS_KEY} > ${IS_KEYFILE}
+          echo "${IS_KEY}" | base64 -d > ${IS_KEYFILE}
           file ${IS_KEYFILE}
           go test -v ./tests
