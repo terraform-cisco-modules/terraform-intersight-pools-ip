@@ -7,6 +7,9 @@ Manages Intersight IP Pools
 Location in GUI:
 `Pools` » `Create Pool` » `IP`
 
+A comprehensive example using this module is available here:
+GitHub: [*Easy IMM - Comprehensive Example*](https://github.com/terraform-cisco-modules/easy-imm-comprehensive-example)
+
 ## Example
 
 ### main.tf
