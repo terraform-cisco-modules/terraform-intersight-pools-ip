@@ -19,7 +19,7 @@ func TestFull(t *testing.T) {
 	// Generate a unique name for objects created in this test to ensure we don't
 	// have collisions with stale objects
 	uniqueId := random.UniqueId()
-	instanceName := fmt.Sprintf("test_pools_ip-%s", uniqueId)
+	instanceName := fmt.Sprintf("test-pools-ip-%s", uniqueId)
 
 	// Input variables for the TF module
 	vars := map[string]interface{}{
@@ -50,7 +50,7 @@ func TestFull(t *testing.T) {
 	expectedJSONTemplate := `
 {
 	"Name":        "{{ .name }}",
-	"Description": "Demo IP Pool",
+	"Description": "default IP Pool.",
 
 	"AssignmentOrder": "sequential",
 	"IpV4Blocks": [
