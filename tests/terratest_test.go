@@ -5,10 +5,9 @@ import (
 	"os"
 	"testing"
 
-	intersight "github.com/cgascoig/intersight-simple-go/client"
+	iassert "github.com/cgascoig/intersight-simple-go/assert"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/maxatome/go-testdeep/td"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -43,67 +42,56 @@ func TestFull(t *testing.T) {
 	assert.NotEmpty(t, moid, "TF module moid output should not be empty")
 
 	//========================================================================
-	// Make Intersight API calls to validate module worked
+	// Make Intersight API call(s) to validate module worked
 	//========================================================================
-	client, err := intersight.NewClient(intersight.Config{
-		KeyID:   os.Getenv("IS_KEYID"),
-		KeyFile: os.Getenv("IS_KEYFILE"),
-	})
-	assert.NoError(t, err)
-	assert.NotNil(t, client)
 
-	// Get the created MO
-	res, err := client.Get(fmt.Sprintf("/api/v1/ippool/Pools/%s", moid))
-	assert.NoError(t, err, "MOID should exist")
-	assert.NotNil(t, res, "MOID should exist")
+	// Setup the expected values of the returned MO.
+	// This is a Go template for the JSON object, so template variables can be used
+	expectedJSONTemplate := `
+{
+	"Name":        "{{ .name }}",
+	"Description": "Demo IP Pool",
 
-	// Setup the expected values of the returned MO. We will use td.CmpSuperMapOf which will ignore any fields
-	// in the result that aren't included here.
-	// Note: td.CmpSuperMapOf only compares non-zero valued fields in the "expected" map, so take care to not
-	// add fields with 0, "", etc values.
-	// See https://pkg.go.dev/github.com/maxatome/go-testdeep/td#SubMapOf
-	expected := map[string]interface{}{
-		"Name":        instanceName,
-		"Description": "Demo IP Pool",
-
-		"AssignmentOrder": "sequential",
-		"IpV4Blocks": []interface{}{
-			map[string]interface{}{
-				"ClassId":    "ippool.IpV4Block",
-				"ObjectType": "ippool.IpV4Block",
-				"From":       "198.18.0.10",
-				"Size":       float64(240), //these are float64 because JSON only has a single Number type which always unmarshal to float64
-				"To":         "198.18.0.249",
-			},
-		},
-		"IpV4Config": map[string]interface{}{
-			"ClassId":      "ippool.IpV4Config",
-			"ObjectType":   "ippool.IpV4Config",
-			"Gateway":      "198.18.0.1",
-			"Netmask":      "255.255.255.0",
-			"PrimaryDns":   "208.67.220.220",
-			"SecondaryDns": "208.67.222.222",
-		},
-		"IpV6Blocks": []interface{}{
-			map[string]interface{}{
-				"ClassId":    "ippool.IpV6Block",
-				"ObjectType": "ippool.IpV6Block",
-				"From":       "2001:db8::10",
-				"Size":       float64(1000),
-				"To":         "2001:DB8::3F7",
-			},
-		},
-		"IpV6Config": map[string]interface{}{
-			"ClassId":      "ippool.IpV6Config",
-			"ObjectType":   "ippool.IpV6Config",
-			"Gateway":      "2001:db8::1",
-			"Prefix":       float64(64),
-			"PrimaryDns":   "2620:119:53::53",
-			"SecondaryDns": "2620:119:35::35",
-		},
+	"AssignmentOrder": "sequential",
+	"IpV4Blocks": [
+		{
+			"ClassId":    "ippool.IpV4Block",
+			"ObjectType": "ippool.IpV4Block",
+			"From":       "198.18.0.10",
+			"Size":       240, 
+			"To":         "198.18.0.249"
+		}
+	],
+	"IpV4Config": {
+		"ClassId":      "ippool.IpV4Config",
+		"ObjectType":   "ippool.IpV4Config",
+		"Gateway":      "198.18.0.1",
+		"Netmask":      "255.255.255.0",
+		"PrimaryDns":   "208.67.220.220",
+		"SecondaryDns": "208.67.222.222"
+	},
+	"IpV6Blocks": [
+		{
+			"ClassId":    "ippool.IpV6Block",
+			"ObjectType": "ippool.IpV6Block",
+			"From":       "2001:db8::10",
+			"Size":       1000,
+			"To":         "2001:DB8::3F7"
+		}
+	],
+	"IpV6Config": {
+		"ClassId":      "ippool.IpV6Config",
+		"ObjectType":   "ippool.IpV6Config",
+		"Gateway":      "2001:db8::1",
+		"Prefix":       64,
+		"PrimaryDns":   "2620:119:53::53",
+		"SecondaryDns": "2620:119:35::35"
 	}
-
-	if td.CmpNoError(t, err) {
-		td.CmpSuperMapOf(t, res, expected, nil)
-	}
+}
+`
+	// Validate that what is in the Intersight API matches the expected
+	// The AssertMOComply function only checks that what is expected is in the result. Extra fields in the
+	// result are ignored. This means we don't have to worry about things that aren't known in advance (e.g.
+	// Moids, timestamps, etc)
+	iassert.AssertMOComply(t, fmt.Sprintf("/api/v1/ippool/Pools/%s", moid), expectedJSONTemplate, vars)
 }
