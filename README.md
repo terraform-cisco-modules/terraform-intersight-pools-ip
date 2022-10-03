@@ -9,8 +9,7 @@ Location in GUI:
 
 ## Easy IMM
 
-A comprehensive example using this module is available here:
-GitHub: [*Easy IMM - Comprehensive Example*](https://github.com/terraform-cisco-modules/easy-imm-comprehensive-example)
+[*Easy IMM - Comprehensive Example*](https://github.com/terraform-cisco-modules/easy-imm-comprehensive-example) - A comprehensive example for policies, pools, and profiles.
 
 ## Example
 
