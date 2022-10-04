@@ -49,10 +49,9 @@ func TestFull(t *testing.T) {
 	// This is a Go template for the JSON object, so template variables can be used
 	expectedJSONTemplate := `
 {
-	"Name":        "{{ .name }}",
-	"Description": "default IP Pool.",
-
 	"AssignmentOrder": "sequential",
+	"Name":        "{{ .name }}",
+	"Description": "{{ .name }} IP Pool.",
 	"IpV4Blocks": [
 		{
 			"ClassId":    "ippool.IpV4Block",

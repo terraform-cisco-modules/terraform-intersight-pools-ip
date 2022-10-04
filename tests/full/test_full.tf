@@ -30,7 +30,7 @@ module "main" {
   source = "../.."
 
   assignment_order = "sequential"
-  description      = "default IP Pool."
+  description      = "${var.name} IP Pool."
   ipv4_blocks = [
     {
       from = "198.18.0.10"
