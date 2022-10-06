@@ -25,7 +25,7 @@ variable "ipv4_blocks" {
   List of IPv4 Address Parameters to Assign to the IP Pool.
     * from - Starting IPv4 Address.  Example "198.18.0.10".
     * size - Size of the IPv4 Address Pool.  Example "240".
-    * to - Ending IPv4 Address.  Example "198.18.0.250"
+    * to - Ending IPv4 Address.  Example "198.18.0.250".
     * IMPORTANT NOTE: You can only Specify `size` or `to` on initial creation.  This is a limitation of the API.
   EOT
   type = list(object(
@@ -41,8 +41,8 @@ variable "ipv4_config" {
   default     = []
   description = <<-EOT
   List of IPv4 Addresses to Assign to the IP Pool.
-    * gateway - Gateway of the Subnet.  Example "198.18.0.1".
-    * netmask - Netmask of the Subnet in X.X.X.X format.  Example "255.255.255.0".
+    * gateway - IPv4 Address of the default gateway for the IPv4 Blocks.  Example "198.18.0.1".
+    * netmask - Netmask for the IPv4 Blocks.  Example "255.255.255.0".
     * primary_dns = Primary DNS Server to Assign to the Pool.  Example "208.67.220.220".
     * secondary_dns = Secondary DNS Server to Assign to the Pool.  Example "208.67.222.222".
   EOT
