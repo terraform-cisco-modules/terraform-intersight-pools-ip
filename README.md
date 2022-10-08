@@ -1,7 +1,9 @@
 <!-- BEGIN_TF_DOCS -->
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Developed by: Cisco](https://img.shields.io/badge/Developed%20by-Cisco-blue)](https://developer.cisco.com)
 [![Tests](https://github.com/terraform-cisco-modules/terraform-intersight-pools-ip/actions/workflows/terratest.yml/badge.svg)](https://github.com/terraform-cisco-modules/terraform-intersight-pools-ip/actions/workflows/terratest.yml)
-# Terraform Intersight Pools - IP
 
+# Terraform Intersight Pools - IP
 Manages Intersight IP Pools
 
 Location in GUI:
@@ -70,7 +72,7 @@ terraform {
 provider "intersight" {
   apikey    = var.apikey
   endpoint  = var.endpoint
-  secretkey = var.secretkey
+  secretkey = fileexists(var.secretkeyfile) ? file(var.secretkeyfile) : var.secretkey
 }
 ```
 
@@ -89,7 +91,15 @@ variable "endpoint" {
 }
 
 variable "secretkey" {
-  description = "Intersight Secret Key."
+  default     = ""
+  description = "Intersight Secret Key Content."
+  sensitive   = true
+  type        = string
+}
+
+variable "secretkeyfile" {
+  default     = "blah.txt"
+  description = "Intersight Secret Key File Location."
   sensitive   = true
   type        = string
 }
@@ -98,21 +108,14 @@ variable "secretkey" {
 ## Environment Variables
 
 ### Terraform Cloud/Enterprise - Workspace Variables
-- Add variable apikey with value of [your-api-key]
-- Add variable secretkey with value of [your-secret-file-content]
+- Add variable apikey with the value of [your-api-key]
+- Add variable secretkey with the value of [your-secret-file-content]
 
-### Linux
+### Linux and Windows
 ```bash
 export TF_VAR_apikey="<your-api-key>"
-export TF_VAR_secretkey=`cat <secret-key-file-location>`
+export TF_VAR_secretkeyfile="<secret-key-file-location>"
 ```
-
-### Windows
-```bash
-$env:TF_VAR_apikey="<your-api-key>"
-$env:TF_VAR_secretkey="<secret-key-file-location>"
-```
-
 
 ## Requirements
 
@@ -134,8 +137,8 @@ $env:TF_VAR_secretkey="<secret-key-file-location>"
 | <a name="input_secretkey"></a> [secretkey](#input\_secretkey) | Intersight Secret Key. | `string` | n/a | yes |
 | <a name="input_assignment_order"></a> [assignment\_order](#input\_assignment\_order) | Assignment order decides the order in which the next identifier is allocated.<br>  * sequential - Identifiers are assigned in a sequential order.<br>  * default - Assignment order is decided by the system. | `string` | `"default"` | no |
 | <a name="input_description"></a> [description](#input\_description) | Description for the IP Pool. | `string` | `""` | no |
-| <a name="input_ipv4_blocks"></a> [ipv4\_blocks](#input\_ipv4\_blocks) | List of IPv4 Address Parameters to Assign to the IP Pool.<br>  * from - Starting IPv4 Address.  Example "198.18.0.10".<br>  * size - Size of the IPv4 Address Pool.  Example "240".<br>  * to - Ending IPv4 Address.  Example "198.18.0.250"<br>  * IMPORTANT NOTE: You can only Specify `size` or `to` on initial creation.  This is a limitation of the API. | <pre>list(object(<br>    {<br>      from = string<br>      size = optional(number, null)<br>      to   = optional(string, null)<br>    }<br>  ))</pre> | `[]` | no |
-| <a name="input_ipv4_config"></a> [ipv4\_config](#input\_ipv4\_config) | List of IPv4 Addresses to Assign to the IP Pool.<br>  * gateway - Gateway of the Subnet.  Example "198.18.0.1".<br>  * netmask - Netmask of the Subnet in X.X.X.X format.  Example "255.255.255.0".<br>  * primary\_dns = Primary DNS Server to Assign to the Pool.  Example "208.67.220.220".<br>  * secondary\_dns = Secondary DNS Server to Assign to the Pool.  Example "208.67.222.222". | <pre>list(object(<br>    {<br>      gateway       = string<br>      netmask       = string<br>      primary_dns   = optional(string, "208.67.220.220")<br>      secondary_dns = optional(string, "")<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_ipv4_blocks"></a> [ipv4\_blocks](#input\_ipv4\_blocks) | List of IPv4 Address Parameters to Assign to the IP Pool.<br>  * from - Starting IPv4 Address.  Example "198.18.0.10".<br>  * size - Size of the IPv4 Address Pool.  Example "240".<br>  * to - Ending IPv4 Address.  Example "198.18.0.250".<br>  * IMPORTANT NOTE: You can only Specify `size` or `to` on initial creation.  This is a limitation of the API. | <pre>list(object(<br>    {<br>      from = string<br>      size = optional(number, null)<br>      to   = optional(string, null)<br>    }<br>  ))</pre> | `[]` | no |
+| <a name="input_ipv4_config"></a> [ipv4\_config](#input\_ipv4\_config) | List of IPv4 Addresses to Assign to the IP Pool.<br>  * gateway - IPv4 Address of the default gateway for the IPv4 Blocks.  Example "198.18.0.1".<br>  * netmask - Netmask for the IPv4 Blocks.  Example "255.255.255.0".<br>  * primary\_dns = Primary DNS Server to Assign to the Pool.  Example "208.67.220.220".<br>  * secondary\_dns = Secondary DNS Server to Assign to the Pool.  Example "208.67.222.222". | <pre>list(object(<br>    {<br>      gateway       = string<br>      netmask       = string<br>      primary_dns   = optional(string, "208.67.220.220")<br>      secondary_dns = optional(string, "")<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_ipv6_blocks"></a> [ipv6\_blocks](#input\_ipv6\_blocks) | List of IPv6 Addresses to Assign to the IP Pool.<br>  * from - Starting IPv6 Address.  Example "2001:db8::10".<br>  * size - Size of the IPv6 Address Pool.  Example "1000".<br>  * to - Ending IPv6 Address.  Example "2001:db8::3f2".<br>  * IMPORTANT NOTE: You can only Specify `size` or `to` on initial creation.  This is a limitation of the API. | <pre>list(object(<br>    {<br>      from = string<br>      size = optional(number, null)<br>      to   = optional(string, null)<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_ipv6_config"></a> [ipv6\_config](#input\_ipv6\_config) | List of IPv6 Configuration Parameters to Assign to the IP Pool.<br>  * gateway - Gateway of the Subnet.  Example "2001:db8::1".<br>  * prefix - Prefix of the Subnet in Integer format.  Example "64".<br>  * primary\_dns = Primary DNS Server to Assign to the Pool.  Example "2620:119:35::35".<br>  * secondary\_dns = Secondary DNS Server to Assign to the Pool.  Example "2620:119:53::53". | <pre>list(object(<br>    {<br>      gateway       = string<br>      prefix        = number<br>      primary_dns   = optional(string, "2620:119:53::53")<br>      secondary_dns = optional(string, "::")<br>    }<br>  ))</pre> | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name for the IP Pool. | `string` | `"default"` | no |
